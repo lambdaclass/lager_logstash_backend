@@ -92,7 +92,7 @@ handle_event({log, {lager_msg, Q, Metadata, Severity, {Date, Time}, _, Message}}
 handle_event({log, {lager_msg, _, Metadata, Severity, {Date, Time}, Message}}, #state{level=L, metadata=Config_Meta}=State) ->
   case lager_util:level_to_num(Severity) =< L of
     true ->
-      Encoded_Message = encode_payload(State#state.lager_level_type,
+      Encoded_Message = encode_json_event(State#state.lager_level_type,
                                                   node(),
                                                   State#state.node_role,
                                                   State#state.node_version,
@@ -101,6 +101,7 @@ handle_event({log, {lager_msg, _, Metadata, Severity, {Date, Time}, Message}}, #
                                                   Time,
                                                   Message,
                                                   metadata(Metadata, Config_Meta)),
+io:format("Sending ~s~n", [Encoded_Message]),
       gen_udp:send(State#state.socket,
                    State#state.logstash_address,
                    State#state.logstash_port,
@@ -124,16 +125,20 @@ code_change(_OldVsn, State, _Extra) ->
   Vsn = get_app_version(),
   {ok, State#state{node_version=Vsn}}.
 
-encode_payload('mask', Node, Node_Role, Node_Version, Severity, _Date, _Time, Message, Metadata) ->
+encode_json_event('mask', Node, Node_Role, Node_Version, Severity, _Date, _Time, Message, Metadata) ->
   jiffy:encode({[
+                {<<"fields">>, 
+                    {[
+                        {<<"level">>, Severity},
+                        {<<"role">>, list_to_binary(Node_Role)},
+                        {<<"role_version">>, list_to_binary(Node_Version)},
+                        {<<"node">>, Node}
+                    ] ++ Metadata }
+                },
+                {<<"@timestamp">>, list_to_binary(logtime())}, %% use the logstash timestamp
                 {<<"message">>, safe_list_to_binary(Message)},
-                {<<"@timestamp">>, list_to_binary(logtime())},
-                {<<"@schema">>, <<"1">>},
-                {<<"@severity">>, Severity},
-                {<<"host">>, Node},
-                {<<"type">>, list_to_binary(Node_Role)},
-                {<<"version">>, list_to_binary(Node_Version)}
-            ] ++ Metadata
+                {<<"type">>, <<"erlang">>}
+            ]
   }).
 
 safe_list_to_binary(L) when is_list(L) ->
