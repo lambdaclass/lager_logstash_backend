@@ -101,7 +101,6 @@ handle_event({log, {lager_msg, _, Metadata, Severity, {Date, Time}, Message}}, #
                                                   Time,
                                                   Message,
                                                   metadata(Metadata, Config_Meta)),
-io:format("Sending ~s~n", [Encoded_Message]),
       gen_udp:send(State#state.socket,
                    State#state.logstash_address,
                    State#state.logstash_port,
@@ -167,7 +166,8 @@ metadata(Metadata, Config_Meta) ->
 
 encode_value(Val, string) -> list_to_binary(Val);
 encode_value(Val, binary) -> Val;
-encode_value(Val, process) -> list_to_binary(pid_to_list(Val));
+encode_value(Val, process) when is_pid(Val) -> list_to_binary(pid_to_list(Val));
+encode_value(Val, process) when is_list(Val) -> list_to_binary(Val);
 encode_value(Val, integer) -> list_to_binary(integer_to_list(Val));
 encode_value(Val, atom) -> list_to_binary(atom_to_list(Val));
 encode_value(_Val, undefiend) -> throw(encoding_error).
