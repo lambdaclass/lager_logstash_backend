@@ -116,6 +116,9 @@ handle_event(_Event, State) ->
 handle_info(_Info, State) ->
   {ok, State}.
 
+terminate(_Reason, #state{socket=S}=State) ->
+  gen_udp:close(S),
+  ok;
 terminate(_Reason, _State) ->
   ok.
 
