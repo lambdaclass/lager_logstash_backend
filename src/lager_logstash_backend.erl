@@ -144,9 +144,9 @@ encode_json_event('mask', Node, Node_Role, Node_Version, Severity, _Date, _Time,
   }).
 
 safe_list_to_binary(L) when is_list(L) ->
-  list_to_binary(L);
+  unicode:characters_to_binary(L);
 safe_list_to_binary(L) when is_binary(L) ->
-  L.
+  unicode:characters_to_binary(L).
 
 get_app_version() ->
   [App,_Host] = string:tokens(atom_to_list(node()), "@"),
