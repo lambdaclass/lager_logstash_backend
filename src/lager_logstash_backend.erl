@@ -168,7 +168,9 @@ metadata(Metadata, Config_Meta) ->
     [{list_to_binary(atom_to_list(Name)), encode_value(Value, proplists:get_value(encoding, Properties))} || {Name, Properties, Value} <- Expanded, Value =/= undefined].
 
 encode_value(Val, string) when is_list(Val) -> list_to_binary(Val);
+encode_value(Val, string) when is_binary(Val) -> Val;
 encode_value(Val, string) when is_atom(Val) -> list_to_binary(atom_to_list(Val));
+encode_value(Val, binary) when is_list(Val) -> list_to_binary(Val);
 encode_value(Val, binary) -> Val;
 encode_value(Val, process) when is_pid(Val) -> list_to_binary(pid_to_list(Val));
 encode_value(Val, process) when is_list(Val) -> list_to_binary(Val);
