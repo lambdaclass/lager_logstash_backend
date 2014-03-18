@@ -116,7 +116,7 @@ handle_event(_Event, State) ->
 handle_info(_Info, State) ->
   {ok, State}.
 
-terminate(_Reason, #state{socket=S}=State) ->
+terminate(_Reason, #state{socket=S}=_State) ->
   gen_udp:close(S),
   ok;
 terminate(_Reason, _State) ->
@@ -127,7 +127,8 @@ code_change(_OldVsn, State, _Extra) ->
   Vsn = get_app_version(),
   {ok, State#state{node_version=Vsn}}.
 
-encode_json_event('mask', Node, Node_Role, Node_Version, Severity, _Date, _Time, Message, Metadata) ->
+encode_json_event('mask', Node, Node_Role, Node_Version, Severity, Date, Time, Message, Metadata) ->
+  DateTime = io_lib:format("~sT~s", [Date,Time]),
   jiffy:encode({[
                 {<<"fields">>, 
                     {[
@@ -137,7 +138,7 @@ encode_json_event('mask', Node, Node_Role, Node_Version, Severity, _Date, _Time,
                         {<<"node">>, Node}
                     ] ++ Metadata }
                 },
-                {<<"@timestamp">>, list_to_binary(logtime())}, %% use the logstash timestamp
+                {<<"@timestamp">>, list_to_binary(DateTime)}, %% use the logstash timestamp
                 {<<"message">>, safe_list_to_binary(Message)},
                 {<<"type">>, <<"erlang">>}
             ]
