@@ -175,6 +175,7 @@ encode_value(Val, binary) when is_list(Val) -> list_to_binary(Val);
 encode_value(Val, binary) -> Val;
 encode_value(Val, process) when is_pid(Val) -> list_to_binary(pid_to_list(Val));
 encode_value(Val, process) when is_list(Val) -> list_to_binary(Val);
+encode_value(Val, process) when is_atom(Val) -> list_to_binary(atom_to_list(Val));
 encode_value(Val, integer) -> list_to_binary(integer_to_list(Val));
 encode_value(Val, atom) -> list_to_binary(atom_to_list(Val));
 encode_value(_Val, undefiend) -> throw(encoding_error).
