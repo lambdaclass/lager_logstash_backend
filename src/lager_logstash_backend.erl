@@ -43,8 +43,8 @@ init(Params) ->
     end,
 
   Level = lager_util:level_to_num(proplists:get_value(level, Params, debug)),
-  Popcorn_Host = proplists:get_value(logstash_host, Params, "localhost"),
-  Popcorn_Port = proplists:get_value(logstash_port, Params, 9125),
+  Host = proplists:get_value(logstash_host, Params, "localhost"),
+  Port = proplists:get_value(logstash_port, Params, 9125),
   Node_Role = proplists:get_value(node_role, Params, "no_role"),
   Node_Version = proplists:get_value(node_version, Params, "no_version"),
 
@@ -57,7 +57,7 @@ init(Params) ->
      ],
 
  {Socket, Address} =
-   case inet:getaddr(Popcorn_Host, inet) of
+   case inet:getaddr(Host, inet) of
      {ok, Addr} ->
        {ok, Sock} = gen_udp:open(0, [list]),
        {Sock, Addr};
@@ -68,8 +68,8 @@ init(Params) ->
   {ok, #state{socket = Socket,
               lager_level_type = Lager_Level_Type,
               level = Level,
-              logstash_host = Popcorn_Host,
-              logstash_port = Popcorn_Port,
+              logstash_host = Host,
+              logstash_port = Port,
               logstash_address = Address,
               node_role = Node_Role,
               node_version = Node_Version,
