@@ -1,7 +1,7 @@
-lager_logstash_backend
+Lager Logstash Backend
 ======================
 
-Backend for lager data into log stash
+Backend for lager data into log stash.
 
 # Logstash
 
@@ -11,43 +11,27 @@ Sample logstash config:
 
 ```
 input {
-  stdin {
-    type => "stdin-type"
-  }
-
-  file {
-    type => "syslog"
-
-    # Wildcards work, here :)
-    path => [ "/var/log/*.log", "/var/log/messages", "/var/log/syslog" ]
-  }
-
-  udp {
-    format => "json"
-    port => 9125
-    type => "erlang"
-  }
+    udp  {
+        codec => "json"
+        port  => 9125
+        type  => "erlang"
+    }
 }
 
 output {
-  stdout { }
-  elasticsearch { embedded => true }
+    elasticsearch { hosts => ["elasticsearch:9200"] }
+    stdout { codec => rubydebug }
 }
 ```
 
 # Testing
 
-
-Build using
-
-```
-./rebar get-deps
-make
-make shell
-```
-
 On the erlang shell use
 
 ```
-lager:log(error, self(), "Error notice").
+$ rebar3 shell
+1> lager:log(error, self(), "Error notice").
 ```
+
+## Notes
+This a modification of [mhald repo](https://github.com/mhald/lager_logstash_backend).
