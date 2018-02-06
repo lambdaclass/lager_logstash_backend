@@ -128,7 +128,8 @@ code_change(_OldVsn, State, _Extra) ->
   {ok, State#state{node_version=Vsn}}.
 
 encode_json_event(_, Node, Node_Role, Node_Version, Severity, Date, Time, Message, Metadata) ->
-  DateTime = io_lib:format("~sT~s", [Date,Time]),
+  TimeWithoutUtc = re:replace(Time, "(\\s+)UTC", "", [{return, list}]),
+  DateTime = io_lib:format("~sT~sZ", [Date,TimeWithoutUtc]),
   jiffy:encode({[
                 {<<"fields">>, 
                     {[
