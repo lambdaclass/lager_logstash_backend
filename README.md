@@ -24,6 +24,14 @@ output {
 }
 ```
 
+# UTC
+Logstash to work correctly **needs UTC timestamps**, for that reason or
+your host is UTC or you configure `sasl` in UTC.
+
+~~~
+{sasl, [{utc_log, true}]}
+~~~
+
 # Testing
 
 On the erlang shell use
