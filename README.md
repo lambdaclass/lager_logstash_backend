@@ -28,6 +28,10 @@ output {
 Logstash to work correctly **needs UTC timestamps**, for that reason or
 your host is UTC or you configure `sasl` in UTC.
 
+# Environment
+Please set the `ENV` variable, if not defined the default value
+of the `env` field wil be `debug` otherwise is the variable's value.
+
 ~~~
 {sasl, [{utc_log, true}]}
 ~~~
