@@ -3,7 +3,7 @@ Lager Logstash Backend
 
 Backend for lager data into log stash.
 
-# Logstash
+# Configure Logstash
 
 Install logstash and setup the sample.config with information about your logstash server.
 
@@ -24,17 +24,18 @@ output {
 }
 ```
 
-# UTC
+# Configure erlang
+## UTC
 Logstash to work correctly **needs UTC timestamps**, for that reason or
 your host is UTC or you configure `sasl` in UTC.
-
-# Environment
-Please set the `ENV` variable, if not defined the default value
-of the `env` field wil be `debug` otherwise is the variable's value.
-
 ~~~
 {sasl, [{utc_log, true}]}
 ~~~
+
+## Environment
+Please set the `ENV` variable, if not defined the default value
+of the `env` field wil be `debug` otherwise is the variable's value.
+
 
 # Testing
 
