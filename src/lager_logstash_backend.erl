@@ -131,7 +131,7 @@ encode_json_event(_, Node, Node_Role, Node_Version, Severity, Date, Time, Messag
   TimeWithoutUtc = re:replace(Time, "(\\s+)UTC", "", [{return, list}]),
   DateTime = io_lib:format("~sT~sZ", [Date,TimeWithoutUtc]),
   jiffy:encode({[
-                {<<"fields">>, 
+                {<<"fields">>,
                     {[
                         {<<"level">>, Severity},
                         {<<"role">>, list_to_binary(Node_Role)},
@@ -141,9 +141,18 @@ encode_json_event(_, Node, Node_Role, Node_Version, Severity, Date, Time, Messag
                 },
                 {<<"@timestamp">>, list_to_binary(DateTime)}, %% use the logstash timestamp
                 {<<"message">>, safe_list_to_binary(Message)},
-                {<<"type">>, <<"erlang">>}
+                {<<"type">>, <<"erlang">>},
+                {<<"env">>, get_env()}
             ]
   }).
+
+get_env() ->
+  Var =
+    case os:getenv("ENV") of
+      false -> "debug";
+      Env -> Env
+    end,
+  list_to_binary(Var).
 
 safe_list_to_binary(L) when is_list(L) ->
   unicode:characters_to_binary(L);
