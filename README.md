@@ -9,8 +9,10 @@ required by [Logstash], because the old one was sent  with ` UTC` added
 at the end, making it invalid. Also was added a way to set  an `ENV`
 environment variable directly to the log's data sent as the field `env`.
 
-# Configure Logstash
+A sample project that shows how to use it can be found
+[here](https://github.com/lambdaclass/erlang_log_to_kibana_example/).
 
+# Configure Logstash
 Install logstash and setup the sample.config with information about your logstash server.
 
 Sample logstash config:
