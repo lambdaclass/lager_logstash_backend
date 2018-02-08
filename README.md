@@ -1,14 +1,13 @@
 Lager Logstash Backend
 ======================
 
-Backend for lager data into log stash. This a modification of
-[mhald repo](https://github.com/mhald/lager_logstash_backend),
+Backend for lager data into log stash. This a modification of [mhald repo],
 this fork was done because we need to correctly handle other scenarios
 not contemplated in the original lib to being able to integrate lager with the
-[EKL Stack](https://www.elastic.co/webinars/introduction-elk-stack).
-This repo ads UTC handling for logs in the format required by
-[Logstash](https://www.elastic.co/products/logstash), and a way to add
-an `ENV` environment variable directly to the log's data.
+[EKL Stack]. This repo adds UTC handling for logs in the format [ISO8601]
+required by [Logstash], because the old one sent one with ` UTC` added
+at the end making it invalid. Also was added a way to set  an `ENV`
+environment variable directly to the log's data sent as the field `env`.
 
 # Configure Logstash
 
@@ -52,3 +51,8 @@ On the erlang shell use
 $ rebar3 shell
 1> lager:log(error, self(), "Error notice").
 ```
+
+[mhald repo]: https://github.com/mhald/lager_logstash_backend
+[EKL Stack]: https://www.elastic.co/elk-stack
+[Logstash]: https://www.elastic.co/products/logstash
+[ISO8601]: https://en.wikipedia.org/wiki/ISO_8601
