@@ -13,7 +13,7 @@ A sample project that shows how to use it can be found
 [here](https://github.com/lambdaclass/erlang_log_to_kibana_example/).
 
 
-# Configure erlang
+# Configure erlang with Rebar3
 You need to add this project and lager as dependency to your `rebar.config`,
 ~~~erlang
 {deps, [
@@ -65,9 +65,9 @@ Finally configure the lager backends in `sys.config` too:
 ~~~
 
 ## Environment
-Please set the `ENV` variable, if not defined the default value
-of the `env` field wil be `debug` otherwise is the variable's value.
-
+The backend will also send the environment variable `ENV` to logstash
+as the field `env`, if not defined the default value of the `env` 
+field will be `debug` otherwise is the variable's value.
 
 # Testing
 
