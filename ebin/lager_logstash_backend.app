@@ -1,0 +1,7 @@
+{application,lager_logstash_backend,
+             [{description,"Lager Logstash Logging Backend"},
+              {vsn,"0.0.1"},
+              {registered,[]},
+              {applications,[kernel,stdlib,lager]},
+              {env,[]},
+              {modules,[lager_logstash_backend]}]}.
