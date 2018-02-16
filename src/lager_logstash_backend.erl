@@ -130,6 +130,7 @@ code_change(_OldVsn, State, _Extra) ->
 encode_json_event(_, Node, Node_Role, Node_Version, Severity, Date, Time, Message, Metadata) ->
   TimeWithoutUtc = re:replace(Time, "(\\s+)UTC", "", [{return, list}]),
   DateTime = io_lib:format("~sT~sZ", [Date,TimeWithoutUtc]),
+  LocalIp = local_ip_v4(),
   jiffy:encode({[
                 {<<"fields">>,
                     {[
@@ -141,6 +142,7 @@ encode_json_event(_, Node, Node_Role, Node_Version, Severity, Date, Time, Messag
                 },
                 {<<"@timestamp">>, list_to_binary(DateTime)}, %% use the logstash timestamp
                 {<<"message">>, safe_list_to_binary(Message)},
+                {<<"host">>, list_to_binary(LocalIp)},
                 {<<"type">>, <<"erlang">>},
                 {<<"env">>, get_env()}
             ]
@@ -153,6 +155,14 @@ get_env() ->
       Env -> Env
     end,
   list_to_binary(Var).
+
+local_ip_v4() ->
+  {ok, Addrs} = inet:getifaddrs(),
+  LocalIps =
+    [Addr || {_, Opts} <- Addrs, {addr, Addr} <- Opts,
+             size(Addr) == 4, Addr =/= {127,0,0,1}],
+  {A,B,C,D} = hd(LocalIps),
+  lists:flatten(io_lib:format("~p.~p.~p.~p", [A,B,C,D])).
 
 safe_list_to_binary(L) when is_list(L) ->
   unicode:characters_to_binary(L);
