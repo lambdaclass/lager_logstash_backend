@@ -95,6 +95,13 @@ input {
     }
 }
 
+filter {
+  mutate {
+    add_field => { "env" => "debug" }
+    replace => { "host" => "ip_address" }
+  }
+}
+
 output {
     elasticsearch { hosts => ["elasticsearch:9200"] }
 }

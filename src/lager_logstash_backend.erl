@@ -130,7 +130,6 @@ code_change(_OldVsn, State, _Extra) ->
 encode_json_event(_, Node, Node_Role, Node_Version, Severity, Date, Time, Message, Metadata) ->
   TimeWithoutUtc = re:replace(Time, "(\\s+)UTC", "", [{return, list}]),
   DateTime = io_lib:format("~sT~sZ", [Date,TimeWithoutUtc]),
-  LocalIp = get_env_ip(),
   jiffy:encode({[
                 {<<"fields">>,
                     {[
@@ -142,25 +141,9 @@ encode_json_event(_, Node, Node_Role, Node_Version, Severity, Date, Time, Messag
                 },
                 {<<"@timestamp">>, list_to_binary(DateTime)}, %% use the logstash timestamp
                 {<<"message">>, safe_list_to_binary(Message)},
-                {<<"host">>, list_to_binary(LocalIp)},
-                {<<"type">>, <<"erlang">>},
-                {<<"env">>, get_env()}
+                {<<"type">>, <<"erlang">>}
             ]
   }).
-
-get_env() ->
-  Var =
-    case os:getenv("ENV") of
-      false -> "debug";
-      Env -> Env
-    end,
-  list_to_binary(Var).
-
-get_env_ip() ->
-  case os:getenv("ERLANG_ELK_LOG_IP") of
-    false -> error("ERLANG_ELK_LOG_IP environment variable not set");
-    Env -> Env
-  end.
 
 safe_list_to_binary(L) when is_list(L) ->
   unicode:characters_to_binary(L);
