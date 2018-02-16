@@ -69,6 +69,9 @@ The backend will also send the environment variable `ENV` to logstash
 as the field `env`, if not defined the default value of the `env` 
 field will be `debug` otherwise is the variable's value.
 
+Finally `ERLANG_ELK_LOG_IP` environment variable should hold the IP
+that will be sent as field `host`.
+
 # Testing
 
 On the erlang shell use
