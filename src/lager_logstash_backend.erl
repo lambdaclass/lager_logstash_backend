@@ -50,10 +50,11 @@ init(Params) ->
 
   Metadata = proplists:get_value(metadata, Params, []) ++
      [
-         {pid, [{encoding, process}]},
-         {line, [{encoding, integer}]},
-         {file, [{encoding, string}]},
-         {module, [{encoding, atom}]}
+      {pid, [{encoding, process}]},
+      {function, [{encoding, atom}]},
+      {line, [{encoding, integer}]},
+      {file, [{encoding, string}]},
+      {module, [{encoding, atom}]}
      ],
 
  {Socket, Address} =
