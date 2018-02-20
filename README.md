@@ -6,7 +6,8 @@ this fork was done because we need to correctly handle other scenarios
 not contemplated in the original lib to being able to integrate lager with the
 [EKL Stack]. This repo adds UTC handling for logs in the format [ISO8601]
 required by [Logstash], because the old one was sent  with ` UTC` added
-at the end, making it invalid. 
+at the end, making it invalid. Also this backend sends the function
+where the log comes from, and other minor improvements.
 
 A sample project that shows how to use it can be found
 [here](https://github.com/lambdaclass/erlang_log_to_kibana_example/).
